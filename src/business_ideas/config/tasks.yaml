@@ -1,17 +1,162 @@
-research_task:
+generate_business_idea_task:
   description: >
-    Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is 2024.
-  expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
-  agent: researcher
+    Based on {user_prompt if user_prompt else 'current market opportunities'},
+    1. Generate an innovative business idea
+    2. Define the specific niche and market positioning
+    3. Estimate Monthly Recurring Revenue (MRR) for first 6 months
+    4. Create a detailed target audience profile
+    5. Develop a brief 5-line business description
+    6. Create a basic persona for the ideal customer
 
-reporting_task:
-  description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    Format your response in a structured manner with clear sections.
   expected_output: >
-    A fully fledge reports with the mains topics, each with a full section of information.
-    Formatted as markdown without '```'
-  agent: reporting_analyst
+    {
+      "business_idea": {
+        "name": "Brief name of the business idea",
+        "description": "5-line description of the business concept",
+        "niche": {
+          "main_category": "Primary market category",
+          "sub_category": "Specific niche within the category",
+          "positioning": "Unique market positioning statement"
+        },
+        "financial_projections": {
+          "mrr_estimates": {
+            "month_1": "$ amount",
+            "month_2": "$ amount",
+            "month_3": "$ amount",
+            "month_4": "$ amount",
+            "month_5": "$ amount",
+            "month_6": "$ amount"
+          },
+          "assumptions": ["Key assumptions behind the estimates"]
+        },
+        "target_audience": {
+          "demographics": ["Key demographic characteristics"],
+          "psychographics": ["Key psychographic characteristics"],
+          "pain_points": ["Main problems being solved"],
+          "buying_behavior": "Typical purchasing patterns"
+        },
+        "ideal_customer_persona": {
+          "name": "Fictional name",
+          "age": "Age range",
+          "occupation": "Typical job/role",
+          "goals": ["Primary goals"],
+          "challenges": ["Main challenges"]
+        }
+      }
+    }
+  agent: business_ideator
+
+analyze_market_viability_task:
+  description: >
+    Analyze the market viability of the following business idea:
+    {business_idea}
+    
+    1. Research current market trends
+    2. Analyze competition and market saturation
+    3. Validate or challenge the MRR estimates
+    4. Identify potential risks and opportunities
+    5. Provide a data-backed recommendation
+
+    Be honest and critical in your assessment. Don't hesitate to challenge 
+    assumptions if data suggests otherwise.
+  expected_output: >
+    {
+      "market_analysis": {
+        "market_trends": {
+          "current_trends": ["List of relevant market trends"],
+          "growth_indicators": ["Key growth metrics"],
+          "market_size": "Total addressable market size"
+        },
+        "competition_analysis": {
+          "direct_competitors": ["List with brief descriptions"],
+          "indirect_competitors": ["List with brief descriptions"],
+          "market_saturation": "Assessment of market saturation level",
+          "barriers_to_entry": ["Key barriers"]
+        },
+        "mrr_validation": {
+          "validated_estimates": {
+            "month_1_to_6": "Revised estimates with justification"
+          },
+          "adjustment_factors": ["Reasons for any adjustments"]
+        },
+        "risk_assessment": {
+          "major_risks": ["Identified risks with probability and impact"],
+          "opportunities": ["Potential growth opportunities"],
+          "mitigation_strategies": ["Suggested risk mitigation approaches"]
+        },
+        "final_recommendation": {
+          "verdict": "GO/NO-GO decision",
+          "confidence_score": "1-10 rating",
+          "key_success_factors": ["Critical factors for success"],
+          "suggested_modifications": ["Recommended changes to original idea"]
+        }
+      }
+    }
+  agent: market_analyst
+
+create_project_plan_task:
+  description: >
+    Create a comprehensive project plan for:
+    {validated_idea}
+    
+    1. Break down the project into main components
+    2. Define key milestones and deliverables
+    3. Identify necessary resources and dependencies
+    4. Create task assignments for PRD and Marketing teams
+    5. Establish a preliminary timeline
+            
+    Ensure all critical aspects of product development and marketing 
+    are covered in your plan.
+  expected_output: >
+    {
+      "project_plan": {
+        "project_components": {
+          "product_development": ["Major development phases"],
+          "marketing": ["Key marketing initiatives"],
+          "operations": ["Operational requirements"]
+        },
+        "milestones": [
+          {
+            "name": "Milestone name",
+            "deliverables": ["Specific outputs"],
+            "target_date": "Timeline",
+            "dependencies": ["Required prerequisites"]
+          }
+        ],
+        "resource_requirements": {
+          "team_members": ["Required roles and skills"],
+          "tools": ["Required tools and technologies"],
+          "budget_estimates": {
+            "development": "Estimated cost",
+            "marketing": "Estimated cost",
+            "operations": "Estimated cost"
+          }
+        },
+        "team_assignments": {
+          "prd_team": {
+            "tasks": ["Detailed task list"],
+            "deadlines": ["Associated timelines"],
+            "dependencies": ["Task dependencies"]
+          },
+          "marketing_team": {
+            "tasks": ["Detailed task list"],
+            "deadlines": ["Associated timelines"],
+            "dependencies": ["Task dependencies"]
+          }
+        },
+        "timeline": {
+          "phase_1": {
+            "duration": "Time period",
+            "key_activities": ["Main activities"],
+            "expected_outcomes": ["Deliverables"]
+          },
+          "phase_2": {
+            "duration": "Time period",
+            "key_activities": ["Main activities"],
+            "expected_outcomes": ["Deliverables"]
+          }
+        }
+      }
+    }
+  agent: project_coordinator

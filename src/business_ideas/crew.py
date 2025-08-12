@@ -18,7 +18,7 @@ class BusinessIdeas():
 	@before_kickoff # Optional hook to be executed before the crew starts
 	def pull_data_example(self, inputs):
 		# Example of pulling data from an external API, dynamically changing the inputs
-		inputs['extra_data'] = "This is extra data"
+		# inputs['extra_data'] = "This is extra data"
 		return inputs
 
 	@after_kickoff # Optional hook to be executed after the crew has finished
@@ -28,7 +28,7 @@ class BusinessIdeas():
 		return output
 
 	@agent
-	def create_business_ideator(self) -> Agent:
+	def business_ideator(self) -> Agent:
 		return Agent(
 			config=self.agents_config['business_ideator'],
 			tools=[SerperDevTool()],
@@ -41,20 +41,22 @@ class BusinessIdeas():
 		)
 
 	@agent
-	def create_market_analyst(self) -> Agent:
+	def market_analyst(self) -> Agent:
 		return Agent(
 			config=self.agents_config['market_analyst'],
 			verbose=True,
 			tools=[SerperDevTool()],
 			allow_delegation=False,
             llm_config={
+                "provider": "gemini",
+                "model": "gemini-1.5-flash-8b",
                 "temperature": 0.3,  # Lower temperature for more analytical responses
                 "request_timeout": 180
             }
 		)
 
 	@agent
-	def create_project_coordinator(self) -> Agent:
+	def project_coordinator(self) -> Agent:
 		return Agent(
 			config=self.agents_config['project_coordinator'],
 			tools=[SerperDevTool()],
@@ -67,7 +69,7 @@ class BusinessIdeas():
 		)
 
 	@agent
-	def create_prd_specialist(self) -> Agent:
+	def prd_specialist(self) -> Agent:
 		return Agent(
 			config=self.agents_config['prd_specialist'],
 			tools=[SerperDevTool()],
@@ -80,7 +82,7 @@ class BusinessIdeas():
 		)
 
 	@agent
-	def create_marketing_strategist(self) -> Agent:
+	def marketing_strategist(self) -> Agent:
 		return Agent(
 			config=self.agents_config['marketing_strategist'],
 			tools=[SerperDevTool()],
@@ -93,16 +95,21 @@ class BusinessIdeas():
 		)
 
 	@task
-	def research_task(self) -> Task:
+	def generate_business_idea_task(self) -> Task:
 		return Task(
-			config=self.tasks_config['research_task'],
+			config=self.tasks_config['generate_business_idea_task'],
 		)
 
 	@task
-	def reporting_task(self) -> Task:
+	def analyze_market_viability_task(self) -> Task:
 		return Task(
-			config=self.tasks_config['reporting_task'],
-			output_file='report.md'
+			config=self.tasks_config['analyze_market_viability_task'],
+		)
+
+	@task
+	def create_project_plan_task(self) -> Task:
+		return Task(
+			config=self.tasks_config['create_project_plan_task'],
 		)
 
 	@crew

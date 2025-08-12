@@ -16,7 +16,7 @@ def run():
     Run the crew.
     """
     inputs = {
-        'topic': 'AI LLMs'
+        # 'topic': 'AI LLMs'
     }
     BusinessIdeas().crew().kickoff(inputs=inputs)
 
