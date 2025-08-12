@@ -1,54 +1,111 @@
 # BusinessIdeas Crew
 
-Welcome to the BusinessIdeas Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+BusinessIdeas is a multi‑agent system built with [crewAI](https://crewai.com) that helps you generate, validate, and plan online business ideas. It orchestrates specialized agents to:
+
+1) Propose a structured business idea, 2) Validate market viability with data, 3) Produce a concise project plan with milestones, resources, and assignments.
+
+## How it works
+
+- Agents (see `src/business_ideas/config/agents.yaml`):
+  - Business Innovation Strategist (`business_ideator`)
+  - Market Research & Validation Specialist (`market_analyst`) — provider "gemini" (`gemini-1.5-flash-8b`)
+  - Project Planning & Development Coordinator (`project_coordinator`)
+  - Product Requirements Documentation Specialist (`prd_specialist`)
+  - Growth Marketing Strategist (`marketing_strategist`)
+
+- Tasks and flow (see `src/business_ideas/config/tasks.yaml`):
+  - `generate_business_idea_task` → structured idea proposal
+  - `analyze_market_viability_task` → market validation with data
+  - `create_project_plan_task` → plan with milestones and team tasks
+
+- Process: sequential execution (see `src/business_ideas/crew.py`).
+- Tools: `SerperDevTool` for web search.
+- Optional input: `user_prompt` to steer the topic; defaults to current opportunities.
 
 ## Installation
 
-Ensure you have Python >=3.10 <=3.13 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
-
-First, if you haven't already, install uv:
+Prereqs: Python >=3.10 <=3.13 and [UV](https://docs.astral.sh/uv/).
 
 ```bash
 pip install uv
+cd business_ideas
+uv sync
 ```
 
-Next, navigate to your project directory and install the dependencies:
+## Configuration
 
-(Optional) Lock the dependencies and install them by using the CLI command:
-```bash
-crewai install
-```
-### Customizing
-
-**Add your `OPENAI_API_KEY` into the `.env` file**
-
-- Modify `src/business_ideas/config/agents.yaml` to define your agents
-- Modify `src/business_ideas/config/tasks.yaml` to define your tasks
-- Modify `src/business_ideas/crew.py` to add your own logic, tools and specific args
-- Modify `src/business_ideas/main.py` to add custom inputs for your agents and tasks
-
-## Running the Project
-
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
+Create a `.env` in the project root with your keys:
 
 ```bash
-$ crewai run
+OPENAI_API_KEY=sk-...
+GEMINI_API_KEY=...
+SERPER_API_KEY=...
 ```
 
-This command initializes the business-ideas Crew, assembling the agents and assigning them tasks as defined in your configuration.
+- `OPENAI_API_KEY`: used by default agents.
+- `GEMINI_API_KEY`: required for `market_analyst` (Gemini provider).
+- `SERPER_API_KEY`: required by `SerperDevTool` for search.
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+## Run
 
-## Understanding Your Crew
+### Option A: crewAI CLI
 
-The business-ideas Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+From the project root:
+
+```bash
+crewai run
+```
+
+Provide inputs interactively or pass them explicitly:
+
+```bash
+crewai run --inputs '{"user_prompt": "AI tools for teachers"}'
+```
+
+### Option B: via UV entrypoints
+
+The project exposes script entrypoints (see `pyproject.toml`). Run the default flow:
+
+```bash
+uv run business_ideas
+```
+
+Other utilities:
+
+```bash
+# Train for N iterations and save to a file
+uv run train 3 training.json
+
+# Replay from a specific task id
+uv run replay <task_id>
+
+# Test for N iterations with a specific model
+uv run test 2 gpt-4o-mini
+```
+
+## Output
+
+The agents return structured sections matching the schemas in `tasks.yaml`:
+
+- Business idea proposal
+- Market viability analysis
+- Project plan
+
+To save results:
+
+```bash
+crewai run --inputs '{"user_prompt": "AI tools for teachers"}' > report.md
+```
+
+## Customize
+
+- Edit agents: `src/business_ideas/config/agents.yaml`
+- Edit tasks: `src/business_ideas/config/tasks.yaml`
+- Orchestrate: `src/business_ideas/crew.py`
+- Add tools: implement under `src/business_ideas/tools/` and wire them in `crew.py`
 
 ## Support
 
-For support, questions, or feedback regarding the BusinessIdeas Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
-
-Let's create wonders together with the power and simplicity of crewAI.
+- Docs: https://docs.crewai.com
+- Repo: https://github.com/joaomdmoura/crewai
+- Discord: https://discord.com/invite/X4JWnZnxPb
